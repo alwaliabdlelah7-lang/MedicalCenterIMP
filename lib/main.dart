@@ -25,12 +25,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1; // جعل المواعيد هي الشاشة الرئيسية للمعاينة
   final List<Widget> _screens = [
     QuickSearchScreen(),
     AppointmentsScreen(),
-    Center(child: Text('لوحة القيادة - سيتم إضافتها لاحقاً')),
-    Center(child: Text('الإعدادات - سيتم إضافتها لاحقاً')),
+    Center(child: Text('لوحة القيادة - قريباً')),
+    Center(child: Text('الإعدادات - قريباً')),
   ];
 
   @override

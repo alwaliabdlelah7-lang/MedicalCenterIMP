@@ -71,3 +71,41 @@ class DatabaseService {
     )).toList();
   }
 }
+  // إضافة موعد جديد
+  Future<int> insertAppointment(Appointment appointment) async {
+    final db = await database;
+    return await db.insert('appointments', appointment.toMap());
+  }
+
+  // جلب جميع المواعيد
+  Future<List<Appointment>> getAllAppointments() async {
+    final db = await database;
+    final result = await db.query('appointments', orderBy: 'startTime DESC');
+    return result.map((json) => Appointment.fromMap(json)).toList();
+  }
+
+  // جلب مواعيد يوم معين
+  Future<List<Appointment>> getAppointmentsForDate(DateTime date) async {
+    final db = await database;
+    final start = DateTime(date.year, date.month, date.day);
+    final end = start.add(Duration(days: 1));
+    final result = await db.query(
+      'appointments',
+      where: 'startTime >= ? AND startTime < ?',
+      whereArgs: [start.toIso8601String(), end.toIso8601String()],
+      orderBy: 'startTime',
+    );
+    return result.map((json) => Appointment.fromMap(json)).toList();
+  }
+
+  // تحديث موعد
+  Future<int> updateAppointment(Appointment appointment) async {
+    final db = await database;
+    return await db.update('appointments', appointment.toMap(), where: 'id = ?', whereArgs: [appointment.id]);
+  }
+
+  // حذف موعد
+  Future<int> deleteAppointment(int id) async {
+    final db = await database;
+    return await db.delete('appointments', where: 'id = ?', whereArgs: [id]);
+  }
