@@ -1,0 +1,55 @@
+name: Build Medical Center
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: medical-center-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+      - run: flutter pub get
+      - run: flutter build windows --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: medical-center-windows
+          path: build/windows/x64/runner/Release/
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+      - run: flutter pub get
+      - run: flutter build web --release --base-href "/MedicalCenterIMP/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+  deploy-web:
+    needs: web
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+    steps:
+      - uses: actions/deploy-pages@v4

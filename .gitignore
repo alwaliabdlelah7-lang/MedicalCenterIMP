@@ -1,0 +1,6 @@
+.env
+*.key
+*.pem
+.DS_Store
+build/
+*.swp
